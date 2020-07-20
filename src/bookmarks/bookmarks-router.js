@@ -42,7 +42,7 @@ bookmarksRouter
       .json(bookmark)
   })
 
-cardRouter
+  bookmarksRouter
   .route('/bookmarks/:id')
   .get((req, res) => {
     const { id } = req.params;
