@@ -1,7 +1,7 @@
 const express = require('express')
 const { v4: uuid } = require('uuid')
 const logger = require('../logger')
-const bookmarks = require('../store')
+const {bookmarks} = require('../store')
 
 const bookmarksRouter = express.Router()
 const bodyParser = express.json()
@@ -33,7 +33,7 @@ bookmarksRouter
     }
     const bookmark = { id: uuid(), title, url, description, rating }
 
-    store.bookmarks.push(bookmark)
+    bookmarks.push(bookmark)
 
     logger.info(`Bookmark with id ${bookmark.id} created`)
     res
