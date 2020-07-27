@@ -11,6 +11,9 @@ const BookmarksService = {
     insertBookmark (knex, bookmark) {
         return knex.into('bookmarks').insert(bookmark)
         .returning('*').then(row => row[0]);
+    },
+    updateBookmark (knex, id, bookmark) {
+        return knex('bookmarks').update(bookmark).where('id',id);
     }
 }
 module.exports = BookmarksService;

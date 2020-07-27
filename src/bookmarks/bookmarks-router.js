@@ -1,7 +1,6 @@
 const express = require('express')
 const { v4: uuid } = require('uuid')
 const logger = require('../logger')
-const {bookmarks} = require('../store')
 const BookmarksService = require('./bookmarks-service')
 const xss = require('xss')
 
@@ -92,6 +91,24 @@ bookmarksRouter
         .status(204)
         .end();
         res.json(sanitizeBookmark(bookmark));
+      })
+      .catch(next)
+  })
+  .patch(bodyParser, (req, res, next) => {
+    const { title, url, description, rating } = req.body
+    const { id } = req.params;
+    if (!title && !url && !rating && !description) {
+        logger.error(`No Fields to update provided`);
+        return res
+          .status(400)
+          .send('Invalid data');
+    }
+    const bookmark = { title, url, description, rating }
+
+    BookmarksService.insertBookmark(req.app.get('db'), id, bookmark)
+      .then(bookmark => {
+        logger.info(`Bookmark with id ${id} updated`);
+        res.status(204).end();
       })
       .catch(next)
   })

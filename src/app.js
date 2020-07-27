@@ -5,7 +5,7 @@ const cors = require('cors')
 const helmet = require('helmet')
 const { NODE_ENV, API_TOKEN } = require('./config')
 const bookmarksRouter = require('./bookmarks/bookmarks-router')
-const { v4: uuid } = require('uuid');
+const logger = require('./logger')
 
 const app = express()
 
