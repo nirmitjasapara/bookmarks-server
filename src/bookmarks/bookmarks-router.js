@@ -3,16 +3,25 @@ const { v4: uuid } = require('uuid')
 const logger = require('../logger')
 const {bookmarks} = require('../store')
 const BookmarksService = require('./bookmarks-service')
+const xss = require('xss')
 
 const bookmarksRouter = express.Router()
 const bodyParser = express.json()
+
+const sanitizeBookmark = bookmark => ({
+  id: bookmark.id,
+  title: xss(bookmark.title),
+  url: bookmark.url,
+  description: xss(bookmark.description),
+  rating: Number(bookmark.rating),
+})
 
 bookmarksRouter
   .route('/bookmarks')
   .get((req, res, next) => {
     BookmarksService.getAllBookmarks(req.app.get('db'))
       .then(bookmarks => {
-        res.json(bookmarks)
+        res.json(bookmarks.map(sanitizeBookmark))
       })
       .catch(next)
   })
@@ -44,7 +53,7 @@ bookmarksRouter
         res
         .status(201)
         .location(`http://localhost:8000/bookmarks/${bookmark.id}`)
-        .json(bookmark)
+        .json(sanitizeBookmark(bookmark))
       })
       .catch(next)
   })
@@ -63,7 +72,7 @@ bookmarksRouter
             .send('Bookmark Not Found');
         }
     
-        res.json(bookmark);
+        res.json(sanitizeBookmark(bookmark));
       })
       .catch(next)
   })
@@ -82,7 +91,7 @@ bookmarksRouter
         res
         .status(204)
         .end();
-        res.json(bookmark);
+        res.json(sanitizeBookmark(bookmark));
       })
       .catch(next)
   })
