@@ -86,7 +86,7 @@ bookmarksRouter
             .status(404)
             .send('Bookmark Not Found');
         }
-        logger.info(`Bookmark with id ${id} deleted.`);
+        logger.info(`Bookmark with id ${bookmark.id} deleted.`);
         res
         .status(204)
         .end();
@@ -105,9 +105,9 @@ bookmarksRouter
     }
     const bookmark = { title, url, description, rating }
 
-    BookmarksService.insertBookmark(req.app.get('db'), id, bookmark)
+    BookmarksService.updateBookmark(req.app.get('db'), id, bookmark)
       .then(bookmark => {
-        logger.info(`Bookmark with id ${id} updated`);
+        logger.info(`Bookmark with id ${bookmark.id} updated`);
         res.status(204).end();
       })
       .catch(next)
