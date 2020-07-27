@@ -13,7 +13,7 @@ const BookmarksService = {
         .returning('*').then(row => row[0]);
     },
     updateBookmark (knex, id, bookmark) {
-        return knex('bookmarks').update(bookmark).where('id',id);
+        return knex('bookmarks').where({ id }).update(bookmark);
     }
 }
 module.exports = BookmarksService;
